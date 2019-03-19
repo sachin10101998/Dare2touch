@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RSA encryptor</title>
+	<script src = "./rsa_encryptor.js"></script>
+	<script src= "./BigInteger.min.js"></script>
+	<script>
+		function processs(){
+			var m = document.getElementById('plaintext').value;
+			document.getElementById('res').innerHTML = encr(m, bigInt('782777990441191869156036825682477528816065150008792825343237315544667865171869609'), 65537);
+		}
+	</script>
+</head>
+<body>
+<input type="text" id = "plaintext" name="plaintext"><br>
+<button onclick = "processs()">Submit</button><br>
+<p id = "res"></p>
+</body>
+</html>
