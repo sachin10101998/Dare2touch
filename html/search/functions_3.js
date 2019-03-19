@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['get_5factual_5fup_5fno',['get_actual_up_no',['../class_grid.html#a6b91de9a2ca3686ed5062fffad6657d5',1,'Grid']]],
+  ['get_5falive_5fplayers',['get_alive_players',['../class_grid.html#ae788bff0b835a65624f39a776d0975a0',1,'Grid']]],
+  ['get_5fboard',['get_board',['../class_grid.html#accf3f97efbd1f6048c1774d8513ccf60',1,'Grid']]],
+  ['get_5fcurrent_5fnop',['get_current_nop',['../classgc.html#a8cb5a622ca41ac1a8fffb9c34d9be5ac',1,'gc']]],
+  ['get_5ffinal_5fpos_5fand_5fprev_5fpos',['get_final_pos_and_prev_pos',['../class_grid.html#a1b6b400e0b42b5f37c2f6ea8690b951f',1,'Grid']]],
+  ['get_5fgameid',['get_gameID',['../classgc.html#a3955042b69290c161ae2a1512b2dab3d',1,'gc']]],
+  ['get_5fgrid',['get_grid',['../classgc.html#af320eba0188bde4bdad16ca5788a64e5',1,'gc']]],
+  ['get_5fini_5flist_5fpid_5fand_5fpnts',['get_ini_list_pid_and_pnts',['../class_grid.html#a5c6ba36291388c474731080de251c6e2',1,'Grid']]],
+  ['get_5fkilled_5flist',['get_killed_list',['../class_grid.html#a7112c6cbcf3843cfa652ae4d8118014f',1,'Grid']]],
+  ['get_5fmarks_5flist',['get_marks_list',['../classgc.html#aa5bcf9e6325119cb42db23d6621b9cae',1,'gc']]],
+  ['get_5fmax_5fnop',['get_max_nop',['../classgc.html#afc2fb3a9514ad3f3f498e55474840c23',1,'gc']]],
+  ['get_5fnoc',['get_noc',['../classgc.html#a272e3dcf949c42cfe614cc33063097c2',1,'gc']]],
+  ['get_5fnoofplayers',['get_NoOfPlayers',['../classgc.html#aad6edecaf37f4cc60bec28efbd809a90',1,'gc']]],
+  ['get_5fnor',['get_nor',['../classgc.html#ad6be6457e206e7e02978611f57e0dd09',1,'gc']]],
+  ['get_5fseq_5fof_5fmoves',['get_seq_of_moves',['../class_grid.html#a2771a5e7cf5565af4c146bcb146e80e2',1,'Grid']]],
+  ['get_5fseq_5fof_5funprocessed_5fmoves',['get_seq_of_unprocessed_moves',['../class_grid.html#ae0975acd40b271dbb0d87d11a9e65b46',1,'Grid']]],
+  ['get_5fserver_5fplayer_5fobj_5flist',['get_server_player_obj_list',['../classgc.html#a8b13d2d62753b019b6ce7d0bed0df74f',1,'gc']]]
+];
