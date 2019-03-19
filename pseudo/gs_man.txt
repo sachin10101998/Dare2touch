@@ -1,0 +1,47 @@
+
+game_sessions = {list_of_games, no_of_games}
+var cutoff = 5
+list of games has objects of type game_core
+
+game_sessions.find_game = function(player, gid, nop){
+	bool found = (list_of_games[gid] != undefined); // found the game with this game id
+	if (found) {
+		if (list_of_games[gid].full) return false;
+		else{
+			player.home_game = list_of_games[gid]
+			list_of_games[gid].add_player(player)
+			if (list_of_games[gid].full){
+				list_of_games[gid].start_updating()
+			}
+			return true;
+		}
+	}
+	else{
+		//create a new instance of game_core class (let g_c)
+		var gc = new game_core(gid, nop, true) // game-core(gid, nop, isServer)
+		gc.add_player(player)
+		player.home_game = gc;
+		list_of_games.gid = gc
+	}
+}
+
+game_sessions.onMessage = function(player, message){
+	var plr_home_game = player.home_game;
+	var lo_number = plr_home_game.get_actual_update_no() - cutoff;
+	inp_seq = pid.append(parsed_message_list) // [up_no, plr_no, dirn]
+	if (inp_seq[0] >= lo_number){
+		var tmp_dir = inp_seq[2];
+		var tmp_x = Math.abs(tmp_dir[0]);
+		var tmp_y = Math.abs(tmp_dir[1]);
+		if ((tmp_x == 1 && tmp_y == 0) || (tmp_x == 0 && tmp_y == 1)){
+			plr_home_game.gc.add_sequence(inp_seq)
+			broadcast all the players of plr_home_game that this player has moved
+		}
+		else {
+			player.send("req for inp_seq[0] is rejected")
+		}
+	}
+	else {
+		player.send("req for inp_seq[0] is rejected")
+	}
+}

@@ -1,0 +1,29 @@
+
+app.js
+on connected:
+	take the game_id passed by client and pass \
+	(client, gid, nop) to gs_man, also, before passing, attach pid \
+	to client before passing it to gsman
+	then redirect inputs to gs_man 
+
+	on (message, dirn):
+		this would automatically mean the client is saying that this is the direction typed by user
+
+on disconnect:
+	if the game has started, then tell the other players to kill this guy
+	or else, tell its grid to remove it as if it was never present
+
+gs_man(plr, gid, nop):
+	srch if game with gid exists or not.
+	if not exists:
+		create a new instance of gamecore with this gid and nop (let gi)
+		now add this player. 
+		attach this gamecore inside the player, so that it can access the 
+		connect its gamecore in ~constant time.
+	else:	
+		join this game and attach this gamecore to the player
+	
+	attach the input method to player->gamecore
+		this input handler should filter the validity of request.
+	also, if a gs is full, then setInterval(gamecore->update bla bla, frq)
+

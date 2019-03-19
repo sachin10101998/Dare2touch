@@ -1,0 +1,112 @@
+function gc(gid, nop=2, isServer = false){
+	var grid_require = require('./grid')
+	var nor = 480, noc = 720;
+	var grid = new grid_require('nor, noc');
+	var full = false
+	var current_nop = 0
+	var max_nop = nop;
+	var server_player_obj_list = []
+	var update_switch = undefined;
+	var interval = 100; // time after which kallar is called;
+	var self = this;
+	started = false
+
+	initial_procedure:
+		if (!isServer):
+			config_connection()
+
+
+
+	member functions:
+		server_add_player(player):
+			call add_player() of grid
+			
+			server_player_obj_list.forEach(function(p){
+				p.emit('s_add_player', player.pid);
+			});
+			server_player_obj_list.forEach(function(p){
+				player.emit('s_add_player', p.pid);
+			});
+
+			server_player_obj_list.push(player)
+			increments current_nop
+			if current_nop = max_nop:
+				full = true;
+
+		client_add_player(pid):
+			call add_player(pid) of grid
+
+		start_updating():
+			update_switch = setInterval(kallar, interval);
+
+		add_sequence(seq): // assuming that it is already verified
+			grid.add_sequence(seq)
+			if (isServer):
+				server_player_obj_list.forEach(function(p){
+					p.emit('move', {pid:p.pid, dirn: dirn})
+				});
+
+		client_handle_move(data):
+			parse it into a sequence, then call add_sequence;
+
+		kallar(): //i mean caller() 
+			if (!isServer):
+				render (grid); // render (grid.get_board())
+				capture_keyboard_input
+					if any valid input:
+						add_sequence
+						send it to server
+			grid.update();
+
+			if (isServer){
+				//var new_killed_list = grid.get_newly_killed_pids()
+				//server_player_obj_list.forEach(function(p){
+				//	p.emit('killed', new_killed_list);
+				//});
+				if (grid.is_game_over()):
+					p.emit('game_over')
+			}
+
+		this.start_updating(){
+			if (isServer){
+				server_player_obj_list.forEach(function(p){
+					p.emit('game_start');
+					update_switch = setInterval(kallar, interval);
+				});
+				update_switch = setInterval(kallar, interval);
+				started = true;
+			}
+			else{
+				update_switch = setInterval(kallar, interval);
+				started = true;
+			}
+		}
+
+		this.input_data_parser(inp_string){
+			var temp_list = inp_string.split("-");
+			var type_casted_temp_list = [parseInt(temp_list[0]), parseInt(temp_list[1])];
+			var temp_dir_list = [parseInt(temp_list[2]), parseInt(temp_list[3])];
+			var type_casted_temp_list.push(temp_dir_list);
+			temp_dir_list = undefined;
+			return type_casted_temp_list;
+		}
+
+		server_kill_player(player):
+			if 
+
+		config_connection():
+			self.socket = io.connect();
+			self.socket.on('disconnect', this.client_ondisconnect);
+
+			//Handle when we connect to the server, showing state and storing id's.
+			self.socket.on('onconnected', this.client_onconnected);
+
+			//On error we just show that we are not connected for now. Can print the data.
+			self.socket.on('error', this.client_ondisconnect);
+			self.socket.on('s_add_player', self.client_add_player);
+			self.socket.on('game_start', start_updating);
+			self.socket.on('move', client_handle_move);
+			self.socket.on('game_over', client_game_over);
+			self.socket.on('killit', client_kill_player);
+
+}
