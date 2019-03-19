@@ -1,0 +1,5 @@
+On the home screen of the game if the player already has an account signed up then he has to login using his/her user id and passsword and if he/she has no account then they could sign up to make an account. After login player will be directed to the next page in which either he/she could play with a random group of players by clicking on play with random player or he/she could play with computer by clicking play with computer or he/she could play with his/her friends by inserting same game id and number of players. This will direct him/her to the game screen.
+game rules :-
+	i) Player will die if it will hit the boundary or will hit the trail of any player(including the player himself too).
+	ii) On every move of the player it will get 1 point and if it will hit the trail of any other player then that player will get 100 points.
+	iii) The last man survived will won the match.

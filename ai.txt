@@ -1,0 +1,78 @@
+function ai :
+	var current_diff = 0.
+	var max_diff = 0.
+	var direction = [].
+	var count = 0.
+	var my_board = board.
+	var nextpos = [];
+	var actual_next_pos = [];
+
+	this.find_diff = function(currentposition,nextposition,lastposition){
+		var ai_points = 0;
+		var player_points = 0;
+		var diff_points = 0;
+		var player_next_pos = [];
+		var pos = [];
+		for(var rr=0;rr<gnor;rr++){
+			for(var i=0;i<gnoc;i++){
+				pos = [rr,i];
+				for(var j=0;j<3;i++){
+					if(j==0){
+						if(currentposition[1][0] - lastposition[1][0] != 0){
+							player_next_pos = [currentposition[1][0],currentposition[1][1] + currentpositon[1][0] - lastposition[1][0]];}
+						else{
+							player_next_pos = [currentpositon[1][0] + currentposition[1][1] - lastposition[1][1],currentposition[1][1]];}}
+					else if(j==1){
+						if(currentposition[1][0] - lastposition[1][0] != 0){
+							player_next_pos = [currentposition[1][0] + currentposition[1][0] - lastposition[1][0],currentposition[1][1]];
+						}
+						else{
+							player_next_pos = [currentposition[1][0],currentposition[1][1] + currentposition[1][1] - lastposition[1][1]];
+						}}
+					else if(currentposition[1][0] != 0 && currentposition[1][0] != gnor && currentposition[1][1] != 0 && currentposition[1][1] != gnoc){
+						if(currentposition[1][0] - lastposition[1][0] != 0){
+							player_next_pos = [currentposition[1][0],currentposition[1][1] - currentposition[1][0] + lastposition[1][0]];
+						}
+						else{
+							player_next_pos = [currentposition[1][0] - currentposition[1][1] + lastposition[1][1],currentposition[1][1]];
+						}}
+					if(board[rr][i] === undefined && pos != player_next_pos && pos != nextposition){
+						if(abs(nextposition[0] - rr) + abs(nextposition[1] - i) > abs(player_next_pos[0] - rr) + abs(player_next_pos[1] - i)){
+							ai_points++;
+						}
+						else if(abs(nextposition[0] - rr) + abs(nextposition[1] - i) < abs(player_next_pos[0] - rr) + abs(player_next_pos[1] - i)){
+							player_points++;
+						}
+					}
+				}
+			}
+		}
+		diff_points = ai_points - player_points;
+		return diff_points;
+	}
+
+	for(var i=0;i<3;i++):
+		if(i==0):
+			if(currentpos[0][0] - lastpos[0][0] != 0):
+				nextpos = [currentpos[0][0],currentpos[0][1] + currentpos[0][0] - lastpos[0][0]];
+			else:
+				nextpos = [currentpos[0][0] + currentpos[0][1] - lastpos[0][1],currentpos[0][1]];
+		else if(i==1):
+			if(currentpos[0][0] - lastpos[0][0] != 0):
+				nextpos = [currentpos[0][0] + currentpos[0][0] - lastpos[0][0],currentpos[0][1]];
+			else:
+				nextpos = [currentpos[0][0],currentpos[0][1] + currentpos[0][1] - lastpos[0][1]];
+		else if(currentpos[0][0] != 0 && currentpos[0][0] != gnor && currentpos[0][1] != 0 && currentpos[0][1] != gnoc):
+			if(currentpos[0][0] - lastpos[0][0] != 0):
+				nextpos = [currentpos[0][0],currentpos[0][1] - currentpos[0][0] + lastpos[0][0]];
+			else:
+				nextpos = [currentpos[0][0] - currentpos[0][1] + lastpos[0][1],currentpos[0][1]];
+		current_diff = find_diff(board,currentpos,nextpos,lastpos).
+		if(current_diff > max_diff):
+			max_diff = current_diff.
+			actual_next_pos = nextpos;
+
+
+	direction = [actual_next_pos[0] - currentpos[0][0],actual_next_pos[1] - currentpos[0][1]];
+	return direction;
+

@@ -1,0 +1,187 @@
+Class Grid:
+	Struct: gplayer:
+		player id
+		inipos
+		inidir
+		finalpos
+		finaldir
+		last_killed = infinity
+		trace{update_no_personal, pos[], direction} //won't include the point of death
+
+
+
+	Data members:
+		1-> Initial list of {player id, pnts} (iniList_Playr) = []
+		2-> sequence_of_moves{up_no, pid, dirn} = []
+		3-> sequence_of_unprocessed_moves = []
+		4-> current_update_number = 0
+		5-> actual_current_up_no = 0
+		6-> Killed_gplayer = []
+//		7-> (DNE) Hell_reg {player_id} = [] // these won't be respawned again
+		8-> Current_players{gplayer} = none
+		9-> should_update = false
+		10-> nor
+		11-> noc
+		10-> board {up_no, pid, dirn} [][] = none
+	Member Functions:
+		1-> Add Players(pid){
+			stat = find({pid, 0}) in iniList_Playr
+			if not found:
+				iniList_Playr.push({pid, 0})
+			else:
+				pass
+		}
+
+		2-> Initialize players(): #
+			Clear the board
+			Handle players' positioning
+			put every elem of iniList_Playr into Current_players \
+			by suitably initializing corr. gplayer // done in c_position_players itself
+
+		2.1-> Position_players(): #
+			//assume that board has been cleared;
+
+		2.2->create_and_set_player_at(pid, inipos, dir): #
+			position_one_player
+
+		3-> get_alive_players():
+			return Current_players
+
+		4-> Update():
+			// returning 0 means false, 1 means true, and 10 means game over
+			if should_update == false
+				return 0
+			else if number_of_players < 2:
+				return 10
+
+			actual_current_up_no = actual_current_up_no + 1             //Behold
+			update_update_number = current_update_number
+
+			if (!sequence_of_unprocessed_moves.empty()){
+				update_update_number = seq[0][0]
+			}
+			let i = index of first elem in sequence_of_moves, such that \
+			its up_no >= update_update_number
+			move all elem from i onwards into the beginning of sequence_of_unprocessed_moves
+
+			while(!sequence_of_unprocessed_moves.empty()):
+				if (sequence_of_unprocessed_moves.length > 1)
+					current_update_number = seq[1][0]
+				else:
+					current_update_number = actual_current_up_no
+				oracle(sequence_of_unprocessed_moves[0])
+				//oracle will take u to current_update_number
+
+			if current_update_number != actual_current_up_no:
+				cur_n = current_update_number
+				current_update_number = actual_current_up_no
+				oracle_extrapolate(cur_n)
+
+			return 1
+
+		5-> getKilledList()
+		6-> add_sequence(seq):
+			should_update = false
+			get index of smallest_elder_entry in sequence_of_moves (let i)
+			if i == sequence_of_moves.length:
+				if (sequence_of_unprocessed_moves.length > 0):
+					get index of smallest_elder_entry in sequence_of_unprocessed_moves (let j)
+					insert seq at j
+					should_update = true
+					return
+				else:
+					insert seq at 0
+					should_update = true
+					return
+
+			else:
+				//if (sequence_of_unprocessed_moves.length > 0):
+				//	get index of smallest_elder_entry in sequence_of_unprocessed_moves (let j)
+				//	insert seq at j
+				//else:
+				//	insert seq at 0
+
+				move the elem in sequence_of_moves (from i onwards) into the start of sequence_of_unprocessed_moves and then insert seq at 0
+					should_update = true
+					return
+
+
+		7-> make_ready_for_update():
+			Initialize_players()
+			should_update = true
+
+		008-> oracle(seq):
+			oracle_update_number = seq[0]
+			respawn_dead(oracle_update_number) // respawns dead people who \
+						died AFTER oracle_update_number
+			oracle_clear_board_from(oracle_update_number)
+			oracle_change_head(seq[1], dirn)
+			oracle_extrapolate(oracle_update_number)
+			return
+
+		009-> oracle_clear_board_from(update_no)
+			//remember to update heads(i.e. finalpos) of players
+			//and actual_current_up_no 
+
+		010-> oracle_extrapolate(from_this_no):
+			cnt = from_this_no
+			while (cnt < current_update_number):
+				move();
+				remove_killed_from_board();
+				cnt++;
+
+
+		011-> move():
+			for p in Current_players:
+				hd = p.finalpos
+				arrow = p.finaldir
+				newpos = hd + arrow  	// this is vector sum
+				if(is_out_of_range(newpos) || get_owner(newpos) == p):
+					kill(p) //think properly later
+				else if (get_owner(newpos) != NULL):
+					//handle points based on corr update number
+					//then kill
+					if newpos.up_no < current_update_number:
+						give_point_to(get_owner(newpos))
+						kill(p)
+					else:
+						kill(p)
+						kill(get_owner(newpos))
+
+				if p was not killed:
+					update the board
+					update the p.trace
+					p.finalpos = newpos
+
+		12-> kill(p):
+			if p in Current_players:
+				move it to Killed_gplayer
+				change its last_killed to the current update number
+			return
+
+		12-> getOwner(pos)
+
+		13-> respawn_dead():
+
+		14-> finder(what, in_this_list, ith_elem_of_each_elem){
+			//finds the smallest index r such that ith_elem_of_each_elem of elem at index at r
+			// is >= what and returns it
+			if in_this_list is empty, return 0
+			if last elem is < 'what' return in_this_list.length
+
+			function finder_help(start_ind, end_ind){
+				mid_ind = floor((start_ind + end_ind)/2); 
+				if (in_this_list[mid_ind] < 'what'){
+					return finder_help(mid_ind+1, end_ind);
+				}
+				else if (mid_ind == 0 || in_this_list[mid_ind-1] < 'what'){
+					return mid_ind
+				}
+				else{
+					return finder_help(start_ind, mid_ind);
+				}
+			}
+
+			res = finder_help(0, in_this_list.length)
+			return res
+		}

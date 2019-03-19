@@ -1,0 +1,116 @@
+body {
+    background-image: url("bckgrnd.png");
+    background-repeat: repeat;
+}
+
+p{
+    text-align: right;
+    color: black;
+    font-size: 30px;
+    margin: 0px 0px 0px 0px;
+}
+
+input[name=PlayerID]{
+    width: 27%;
+    padding: 12px 10px;
+    margin: 8px 100px 10px 0px;
+    display: inline-block;
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+}
+
+input[name=password]{
+    width: 27%;
+    padding: 12px 10px;
+    margin: 8px 100px 10px 0px;
+    display: inline-block;
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+}
+input[name=repassword]{
+    width: 27%;
+    padding: 12px 10px;
+    margin: 8px 150px 10px 0px;
+    display: inline-block;
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+}
+.login_button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0px 20px 0px;
+    cursor: pointer;
+    width: 10%;
+}
+
+.signup_button {
+    background-color: blue;
+    color: white;
+    padding: 2px 2px;
+    margin: 0px 10px 0px 10px;
+    cursor: pointer;
+    width: 7%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 200px 12px 200px;
+}
+
+img.Dare2Touch {
+    width: 40%;
+    border-radius: 10%;
+}
+
+.container {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+.error{
+    color:red;
+}
+
+.game{
+    width: 15%;
+    padding: 10px 10px 10px 10px;
+    margin: 0px 10px 10px 10px;
+    display: inline-block;
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+}
+
+.play_button{
+    background-color: blue;
+    color: white;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 50px 10px 100px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 17%;
+}
+
+.play1_button{
+    background-color: green;
+    color: white;
+    padding: 10px 10px 10px 10px;
+    margin: 10px 0px 10px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 15%;
+}
+
+.exit_game{
+    background-color: green;
+    margin: 10px 0px 10px 30px;
+    padding: 10px 10px 10px 10px;
+    border: none;
+    cursor: pointer;
+    width: 7%;
+}

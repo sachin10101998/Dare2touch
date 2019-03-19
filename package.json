@@ -1,0 +1,30 @@
+{
+  "name": "dare2touch",
+  "version": "1.0.0",
+  "description": "A simple game for CS251",
+  "main": "app_new1.js",
+  "dependencies": {
+    "connect": "^3.6.5",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "method-override": "^2.3.10",
+    "mysql": "^2.15.0",
+    "session.socket.io": "^0.2.1",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryanbdps9/dare2touch.git"
+  },
+  "author": "Innovative_pals",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryanbdps9/dare2touch/issues"
+  },
+  "homepage": "https://github.com/aryanbdps9/dare2touch#readme"
+}

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>DARE2TOUCH</title>
+		<link rel="stylesheet" type="text/css" href="index_style.css">
+		<link rel="icon" href="favicon.ico">
+	</head>
+
+	<script src = "/socket.io/socket.io.js"></script>
+	<script src="/renderer.js"></script>
+	<script src="/gc.js"></script>
+	<script src="/grid.js"></script>
+	<script src= "./rsa/BigInteger.min.js"></script>
+	<script src="./rsa/rsa_encryptor.js"></script>
+	<script>
+		function sleep(miliseconds) { // copied from https://stackoverflow.com/questions/16623852/how-to-pause-javascript-code-excution-for-2-seconds
+		   console.log("Sleep called");
+		   var currentTime = new Date().getTime();
+		   var newTime = currentTime - 1;
+
+		   while (currentTime + miliseconds >= newTime) {
+		   		console.log("are bhai bhai bhai");
+		   		newTime = new Date().getTime();
+		   }
+		}
+		var rsa_pac = undefined;
+		var my_game_core = new gc(0);
+		var socket = my_game_core.get_socket();
+		while (socket == undefined){
+			console.log("socket undefined");
+			socket = my_game_core.get_socket();
+		}
+		var verifieddd = false;
+
+		function send_pack_req(){
+			console.log("sendin package request");
+			if (socket == undefined){
+				console.log("socket undefined");
+			}
+			socket.emit('get_package');
+			console.log("get_package emit kr diya");
+			let co = 1;
+			while (!verifieddd){
+				console.log("verify nhi hua");
+				socket.emit('get_package');
+				sleep(50);
+				co++;
+				if (co >= 100) {
+					console.log("Breaking the habit");
+					break;
+				}
+			}
+			verifieddd = false;
+
+		}
+
+		window.onload = function(){
+			console.log("window onload called");
+			socket.emit("get_package");
+		}
+
+
+		// socket.emit('get_package');
+		socket.on('rsa_enc_package', function(data){
+			console.log("package received");
+			rsa_pac = data;
+			verifieddd = true;
+		});
+
+		// send_pack_req();
+		console.log("reached before join");
+		function Join() {
+			document.getElementById('username-error-container').innerHTML ='';
+			document.getElementById('password-error-container').innerHTML ='';
+			Player=document.getElementById('PlayerID').value.trim();
+			password=document.getElementById('password').value;
+			if(Player==""){document.getElementById('username-error-container').innerHTML ='Please fill in the Username';}
+			if(password==""){document.getElementById('password-error-container').innerHTML ='Please fill in the Password';}
+			// else if (password!="password"){document.getElementById('password-error-container').innerHTML ='Wrong Password';}
+			else {
+				var enc_pswd = undefined;
+				while (rsa_pac === undefined){
+					console.log("sleep loop");
+					socket.emit('get_package');
+					sleep(100);
+				}
+				enc_pswd = encr(password, rsa_pac.n, rsa_pac.e);
+				socket.emit('setPlayerID', {username: Player, pswd: enc_pswd});
+			}
+		};
+
+		console.log("reached before signup");
+		function Signup(){
+			document.getElementById('username-error-container').innerHTML ='';
+			document.getElementById('password-error-container').innerHTML ='';
+			newUser = document.getElementById('PlayerID').value.trim();
+			password=document.getElementById('password').value;
+			repassword=document.getElementById('repassword').value;
+			username_length=newUser.toString().length;
+			password_length=password.toString().length;
+			if(newUser==""){document.getElementById('username-error-container').innerHTML ='Please fill in the Username';}
+			else if(password==""){document.getElementById('password-error-container').innerHTML ='Please fill in the Password';}
+			else if(password!=repassword){document.getElementById('password-error-container').innerHTML ='The two passwords do not match';}
+			else if(username_length >40){document.getElementById('username-error-container').innerHTML ='Username is too long. Keep it below 40 characters';}
+			else if(password_length >16){document.getElementById('password-error-container').innerHTML ='Password is too long. Keep it below 16 characters';}
+			// else if (password!="password"){document.getElementById('password-error-container').innerHTML ='Wrong Password';}
+			else {
+				var enc_pswd = undefined;
+				while (rsa_pac === undefined){
+					socket.emit('get_package');
+					sleep(50);
+				}
+				enc_pswd = encr(password, rsa_pac.n, rsa_pac.e);
+				socket.emit('create_player', {username: newUser, pswd: enc_pswd});
+			}
+		}
+
+		function Signup_window(){
+			document.getElementById('username-error-container').innerHTML ='';
+			document.getElementById('password-error-container').innerHTML ='';
+			//document.getElementById('login_button').style.visibility='hidden';
+			document.getElementById('signup').innerHTML='<center><b>Re-Enter Password </b><input id="repassword" type="password" placeholder="Re-Enter Password" name="repassword"><br>'+
+			'<button id="signup_button" class="login_button" type="submit" onclick="Signup()"><b>Sign Up</b></button></center>';
+		}
+
+		console.log("reached before play with Friends");
+		function Play_With_Friends(){
+			//Player=document.getElementById('PlayerID').value;
+			game_ID = document.getElementById('GameID').value.trim();
+			no_OfPlayers = document.getElementById('NoOfPlayers').value.trim();
+			if(game_ID==""){document.getElementById('gameid-error-container').innerHTML ='Please enter any Game ID';}
+			else if(no_OfPlayers==""){
+				no_OfPlayers=4;
+				socket.emit('setGameID', {gameID:game_ID, playerID:Player, noOfPlayers:no_OfPlayers});
+			}
+			else if(isNaN(no_OfPlayers) || (Number(no_OfPlayers) != parseInt(no_OfPlayers)) || Number(no_OfPlayers) <= 0){document.getElementById('gameid-error-container').innerHTML ='Please enter a positive integer for the no. of players field';}
+			else if(no_OfPlayers==1){document.getElementById('gameid-error-container').innerHTML ='Please choose <b>play with computer</b> for single player';}
+			else socket.emit('setGameID', {gameID:game_ID, playerID:Player, noOfPlayers:no_OfPlayers});		
+		}
+
+		// game_ID=-123456789;
+		function Random_play(){
+			game_ID=-123456789;
+			no_OfPlayers = 4;
+			socket.emit('setGameID', {gameID:game_ID, playerID:Player, noOfPlayers:no_OfPlayers});
+		}
+
+		socket.on('random_game_full', function(data){
+			// game_ID--;
+			// data.gameID=game_ID;
+			socket.emit('setGameID', data);
+		});
+
+		socket.on('GameIDExists', function(data) {
+			document.getElementById('gameid-error-container').innerHTML = data;
+		});
+
+		socket.on('PlayerIDExists', function(data) {
+			document.getElementById('username-error-container').innerHTML ='Username <b>'+ data + '</b> already exists. Please try another username.';
+		});
+
+		socket.on('do_login', function(){
+			document.getElementById('username-error-container').innerHTML = 'Please login';
+		});
+
+		socket.on('do_login1', function(){
+			document.getElementById('username-error-container').innerHTML = 'Please login';
+			document.getElementById('signup').innerHTML='<button id="login_button" class="login_button" type="submit" onclick="Join()"><b>Login</b></button><br>';
+		});
+
+		socket.on('do_login2', function(data){
+			document.getElementById('password-error-container').innerHTML = 'User <b>'+ data + '</b> does not exists. Please SignUp below';
+		});		
+
+
+		socket.on('re_signup', function(data){
+			document.getElementById('username-error-container').innerHTML = 'Username <b>'+ data + '</b> already exists. Please try another username.';
+		})
+
+		socket.on('re_enter_credentials', function() {
+			document.getElementById('username-error-container').innerHTML ='Wrong credentials<br>\n';
+			console.log("We sent wrong credentials");
+		});
+		
+
+		socket.on('settingPlayerID', function(data){
+			Player = data;
+			console.log("caught setPlayerID");
+			game_id_area();
+			//game_play_area();
+		});
+
+		// socket.on('join_success', function(data){
+		// 	if(my_game_core != undefined || my_game_core != null){
+		// 		my_game_core.set_socket(null);
+		// 		my_game_core = null;
+		// 	}
+		// 	my_game_core = new gc(data.gameID);
+		// 	my_game_core.set_socket(socket);
+		// 	my_game_core.config_connection();
+		// 	socket.emit('join_success1', data);
+		// 	//console.log(socket);
+
+		// });
+
+		socket.on('game_over1', function(){
+			window.onkeydown = null;
+			// if(my_game_core != undefined || my_game_core!= null){
+			// 	my_game_core.self = null;
+			// 	my_game_core.set_socket(null);
+			// 	my_game_core = null;
+			// }
+			// my_game_core = new gc(0);
+			// my_game_core.set_socket(socket);
+			// my_game_core.config_connection();
+			window.location.reload(true);
+			game_id_area();
+		});
+
+		socket.on('print_player', function(data){
+			//document.getElementById('everything').innerHTML = '';
+			if (data == Player){
+				document.body.innerHTML ='<p><button type="submit" onclick="Exit_game()" class="exit_game"><u>Exit Game</u></button><br>'+
+				 Player + '</p>'+
+				'You are Connected<br>';
+			}
+			else {document.body.innerHTML +='<b>'+data+ '</b> is Connected<br>';}
+		});
+
+		socket.on('display_canvas', function(){
+			game_play_area();
+			// my_game_core.add_keyboard(1);
+		});
+
+		function Exit_game(){
+			console.log("exit game was called");
+			window.onkeydown = null;
+			window.location.reload(true);
+			socket.emit('disconnect1');
+			game_id_area();
+		}
+
+		function logout(){
+			socket.emit('logout');
+		}
+
+		function game_id_area(){
+			window.onkeydown = null;
+			// if(my_game_core != undefined || my_game_core!= null){
+			// 	my_game_core.self = null;
+			// 	my_game_core.set_socket(null);
+			// 	my_game_core = null;
+			// }
+			document.body.innerHTML = '<div id="everything" class="container"></div>';
+			//document.getElementById('imgcontainer').innerHTML = '';
+			document.getElementById('everything').innerHTML ='<p><button type="submit" onclick="logout()" class="exit_game"><u>Logout</u></button><br>'+
+			Player + '</p>'+
+			'<center>'+
+			'<label><b>Game ID</b></label>&emsp;'+
+			'<input id = "GameID" type = "text" name = "GameID" value = "" placeholder = "Enter GameID" class="game">'+
+			'<label><b>No. of Players</b></label>&emsp;'+
+			'<input id = "NoOfPlayers" type = "text" name = "NoOfPlayers" value = "" placeholder = "Enter the No. of Players(2 or more)" class="game"><br>'+
+			'<div id="gameid-error-container" type="error" class="error"></div><br>'+
+			'<button type="submit" onclick="Play_With_Friends()" class="play1_button">Play With Friends</button><br><br>'+
+			'<a href = "./index_ai.html" target = "_blank"><button type="submit" onclick="" class="play_button">Play With Computer</button></a>'+
+			'<button type="submit" onclick="Random_play()" class="play_button">Play In Random Arena</button>'+
+			'</center>';
+		}
+
+		function game_play_area(){
+			document.body.innerHTML ='<p><button type="submit" onclick="Exit_game()" class="exit_game"><u>Exit Game</u></button><br>'+
+				Player + '</p>'+
+			'<div id = "win"><canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas></div>';
+		}
+
+		socket.on('player_disconnected', function(pida){
+			document.body.innerHTML += '<b>'+pida+'</b> was disconnected';
+		});
+
+		socket.on('starting_time', function(data){
+			start1=data;
+		});
+
+		socket.on('ref', function(){
+			window.location.reload(true);
+		});
+		
+		socket.on('ending_time', function(data){
+			end1=data;
+			timediff = end1- start1;
+			console.log("time diff is", timediff);
+		});
+
+	</script>
+	
+	<body>
+		<!--input id = "PlayerID" type = "text" name = "PlayerID" value = "" 
+			placeholder = "Enter Username!">
+		<input id = "GameID" type = "text" name = "GameID" value = "" 
+			placeholder = "Enter GameID!">
+		<input id = "NoOfPlayers" type = "text" name = "NoOfPlayers" value = "" 
+			placeholder = "Enter the No. of Players!">
+		<button type = "button" name = "button" onclick = "Join()">
+			Connect!!
+		</button><br> -->
+		<!-- <div id = "Form">
+			
+		</div> -->
+		<div id = "win">
+		  <div id="imgcontainer" class="imgcontainer">
+		    <img src="dare2touch.png" alt="Dare2Touch" class="Dare2Touch">
+		  </div>
+
+		  <div id="everything" class="container">
+		  	<center>
+			    <label><b>Username</b></label>&emsp;
+			    <input id = "PlayerID" type="text" placeholder="Enter Username" name="PlayerID"><br>
+				<div id = "username-error-container" class="error"></div>
+			    <label><b>Password </b></label>&emsp;
+			    <input id="password" type="password" placeholder="Enter Password" name="password"><br>
+			    <div id = "password-error-container" class="error"></div>
+			    <div id="signup">
+			    <button id="login_button" class="login_button" type="submit" onclick="Join()"><b>Login</b></button><br>
+			    First Time User?? <button class="signup_button" type="submit" onclick="Signup_window()">SignUp</button>
+				</div>
+				<!-- <a href = "./index_ai.html" target = "_blank"><button type="submit" onclick="" class="play_button">Play With Computer</button></a> -->
+		    </center>
+		  </div>
+		</div>
+		<!-- <canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas> -->
+	</body>
+</html>

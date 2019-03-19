@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>DARE2TOUCH</title>
+		<link rel="stylesheet" type="text/css" href="index_style.css">
+	</head>
+	<script src="./renderer.js"></script>
+	<script src="./duplicate_gc.js"></script>
+	<script src="./grid.js"></script>
+	<script src="./ai.js"></script>
+	<script>
+		var my_game_core = new ai_gc(0);
+		
+		function startPlay(level){
+			game_play_area();
+			my_game_core.start_start(level);
+		}
+
+		// window.location.reload(true);
+
+		function Exit_game(){
+			console.log("exit game was called");
+			window.onkeydown = null;
+			window.location.reload(true);
+			game_id_area();
+		}
+
+		function game_play_area(){
+			document.body.innerHTML ='<p><button type="submit" onclick="Exit_game()" class="exit_game"><u>Exit Game</u></button><br>'+
+				'<button type="submit" onclick="Logout()> Logout </button>' + '</p>'+
+			'<div id = "win"><canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas></div>';
+		}
+
+	</script>
+	
+	<body>
+		<div id = "win">
+		  <div id="imgcontainer" class="imgcontainer">
+		    <img src="dare2touch.png" alt="Dare2Touch" class="Dare2Touch">
+		  </div>
+		  <div id="everything" class="container">
+		  	<center>
+			    <button id="start_play" class="play1_button" type="submit" onclick="startPlay('easy')"><b>Easy</b></button><br>
+			    <button id="start_play" class="play1_button" type="submit" onclick="startPlay('medium')"><b>Medium</b></button><br>
+			    <button id="start_play" class="play1_button" type="submit" onclick="startPlay('hard')"><b>Hard</b></button><br>
+		    </center>
+		  </div>
+		</div>
+		<!-- <canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas> -->
+	</body>
+</html>

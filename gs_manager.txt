@@ -1,0 +1,43 @@
+functions :
+	
+	storedpid_list = [];
+	total_player = 2 // actually it will be given by app.js
+	the_grid = new Grid(480,720)
+	current_player = 0
+	cutoff = 4;
+	kill_list = [];
+
+	pid_list(pid) :
+		playerin = false.
+		check pid in storedpid_list. // if true playerin = true.
+		if(!playerin) :
+			add pid in storedpid_list.
+			current_player++.
+		the_grid.add_player(pid).
+		game_start(current_player).
+
+	game_start(current_player) :
+		if(current_player == total_player) :
+			the_grid.make_ready_for_update();
+			setinterval(update(), time);
+
+	movement(seq) :
+		actual_state = the_grid.get_actual_up_no();
+		if(actaul_state - seq[0] <= cutoff) :
+			the_grid.add_sequence(seq);
+
+	killed_player() :
+		setinterval(up_kill_list(), time);
+
+	up_kill_list() :
+		game_kill_list = the_grid.killed_pid_list();
+		if(kill_list != game_kill_list) :
+			// Send the message that pid which are in killed_pid_list but not in kill_list are killed.
+			kill_list = game_kill_list;
+
+	F():
+		var stat  =  update();
+		take_killed_list and recoganize newly dead clients \
+		and send all players the message that they have died
+		if (stat == 10):
+			declare game over
