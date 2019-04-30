@@ -1,7 +1,7 @@
 {
-  "name": "dare2touch",
+  "name": "Touch-Dare",
   "version": "1.0.0",
-  "description": "A simple game for CS251",
+  "description": "A simple game",
   "main": "app_new1.js",
   "dependencies": {
     "connect": "^3.6.5",
@@ -19,12 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aryanbdps9/dare2touch.git"
+    "url": "git+https://github.com/sachin10101998/Touch-Dare.git"
   },
   "author": "Innovative_pals",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aryanbdps9/dare2touch/issues"
+    "url": "https://github.com/sachin10101998"
   },
-  "homepage": "https://github.com/aryanbdps9/dare2touch#readme"
+  "homepage": "https://github.com/sachin10101998"
 }
