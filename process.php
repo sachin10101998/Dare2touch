@@ -26,11 +26,11 @@ if (isset($_POST['add_event_btn'])){
 	}else{
 		echo "<p>Event Creation Successful!!</p>";
 		echo "<p>The ID for this query is:", mysqli_insert_id($conn), "</p>";
-		// echo "success hua!";
+		
 	}
 	echo "You will be redirected back to previous page in about 5 seconds. <a href = \"index.php\">Go back now</a>";
 	header( "refresh:5;url=index.php" )	;
-		// echo "$ins_query";
+		
 }
 if (isset($_POST['login'])){
 	$old_user = mysqli_real_escape_string($conn, $_POST['usrnam']);
