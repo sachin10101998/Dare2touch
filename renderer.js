@@ -1,7 +1,5 @@
 function renderer(board,gnor,gnoc,list_of_players,starting){
-	// var arr = [[],[],[],[],[],[],[],[],[],[]];
-	// arr[1] = [[1,2,3],[0,1,4],[0,2,3]];
-	// arr[2] = [[0,2,3],[1,1,3],[1,1,2]];
+	
 	var startTime = new Date();
 	var list_of_colors=["green", "red", "blue", "yellow", "white"];
 	console.log("renderer was called");
@@ -9,15 +7,11 @@ function renderer(board,gnor,gnoc,list_of_players,starting){
 	var ctx = canvas.getContext("2d");
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
-	// console.log("ch = " , window.innerHeight);
-	// console.log("cah = ", canvas.height);
-	// console.log("cw = ", window.innerWidth);
-	// console.log("caw = ", canvas.width);
+	
 
 	var side = Math.min((window.innerWidth - 130)/gnoc, window.innerHeight/gnor);
 	side *= 0.9;
-	// console.log("side:  ", side);
-	// var side = 4.1;
+	
 	for (var rr = 0; rr < gnor; rr++){
 		for (var i = 0; i < gnoc; i++){
 			if(board[rr][i] === undefined){
@@ -69,7 +63,7 @@ function renderer(board,gnor,gnoc,list_of_players,starting){
 	
 	var endTime = new Date();
 	var timeDiff = endTime - startTime;
-	//console.log("time taken is", timeDiff);
+	
 }
 
 // module.exports = renderer;
